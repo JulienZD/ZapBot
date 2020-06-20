@@ -1,0 +1,26 @@
+{
+  "name": "ZapBot",
+  "version": "0.0.1",
+  "description": "A simple Discord bot",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "discord.js": "^12.2.0"
+  },
+  "engines": {
+    "node": "12.x"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JulienZD/ZapBot.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JulienZD/ZapBot/issues"
+  },
+  "homepage": "https://github.com/JulienZD/ZapBot#readme",
+  "author": "Julien"
+}
