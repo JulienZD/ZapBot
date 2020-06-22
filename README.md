@@ -16,3 +16,6 @@ The main features I'm hoping to implement are:
     * Example command: `!weather <city>`
 
 I want to look into storing the amount of command calls - possibly per user - somehow. This will probably have me learn about something like SQLite.
+
+## Credits
+Bot icon made by [Freepik](https://www.flaticon.com/authors/freepik) from www.flaticon.com
