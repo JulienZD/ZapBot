@@ -4,7 +4,8 @@
   "description": "A simple Discord bot",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "test": "mocha"
   },
   "dependencies": {
     "discord.js": "^12.2.0",
@@ -23,5 +24,8 @@
     "url": "https://github.com/JulienZD/ZapBot/issues"
   },
   "homepage": "https://github.com/JulienZD/ZapBot#readme",
-  "author": "Julien"
+  "author": "Julien",
+  "devDependencies": {
+    "mocha": "^8.0.1"
+  }
 }
