@@ -1,4 +1,4 @@
 {
-  "prefix": "::",
-  "status": "::help for help"
+  "prefix": "#",
+  "status": "#help for help"
 }
