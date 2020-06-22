@@ -13,16 +13,26 @@ client.on('ready', () => {
 		.catch(console.error);
 });
 
-client.on('message', msg => {
-	if (msg.content === prefix + 'ping') {
-		msg.channel.send('pongf');
-		console.log('Hey');
+client.on('message', message => {
+	if (!message.content.startsWith(prefix) || message.author.bot) return;
+
+	const args = message.content.slice(prefix.length).split(/ +/);
+	const command = args.shift().toLowerCase();
+	if (command === 'ping') {
+		message.channel.send('pongf');
 
 	}
-	if (msg.content === 'rosh') {
+	if (command === 'rosh') {
 		setTimeout(function() {
-			msg.channel.send('is great');
+			message.channel.send('is great');
 		}, 5000);
+	}
+
+	if (command === 'args-info') {
+		if (!args.length) {
+			return message.channel.send('yeet!');
+		}
+		message.channel.send(`Command name: ${command}\nArguments: ${args}`);
 	}
 });
 
