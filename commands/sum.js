@@ -2,22 +2,20 @@ module.exports = {
 	name: 'sum',
 	description: 'Sums two integers and returns the result',
 	execute(message, args) {
-		let result = 0;
-		const numbers = [];
 		if (invalidArgs(args)) return this.invalid(message);
-		for (const arg of args) {
-			numbers.push(arg);
-			result += parseInt(arg);
-		}
-		let msg = '';
-		for (let i = 0; i < numbers.length; i++) {
-			msg += numbers[i];
-			if (i !== numbers.length - 1) {
-				msg += ' + ';
+
+		let result = 0;
+		let sumNumbers = '';
+
+		for (let i = 0; i < args.length; i++) {
+			sumNumbers += args[i];
+			if (i !== args.length - 1) {
+				sumNumbers += ' + ';
 			}
+			result += parseInt(args[i]);
 		}
-		msg += ` = ${result}`;
-		message.channel.send(msg);
+
+		message.channel.send(`${sumNumbers} = ${result}`);
 	},
 	invalid(message) {
 		message.reply('Incorrect usage of command. Provide at least two numbers separated by spaces.');
