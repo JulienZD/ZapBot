@@ -8,11 +8,12 @@ module.exports = {
 		let sumNumbers = '';
 
 		for (let i = 0; i < args.length; i++) {
-			sumNumbers += args[i];
+			const number = args[i];
+			sumNumbers += number;
 			if (i !== args.length - 1) {
 				sumNumbers += ' + ';
 			}
-			result += parseInt(args[i]);
+			result += parseInt(number);
 		}
 
 		message.channel.send(`${sumNumbers} = ${result}`);
