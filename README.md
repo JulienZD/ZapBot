@@ -8,7 +8,7 @@ By working on this project I hope to get a better understanding of JavaScript an
 
 The main features I'm hoping to implement are:
 * Reminder system
-  * Something like Google Assistant's remind me
+  * Similar to Google Assistant's reminder system
   * Example command: `!remindme <delay> <reminder>`
 * Weather forecast
     * Custom favorite location
