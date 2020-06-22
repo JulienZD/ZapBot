@@ -21,6 +21,6 @@ module.exports = {
 		message.channel.send(msg);
 	},
 	invalid(message) {
-		message.reply('Invalid arguments');
+		message.reply('Incorrect usage of command. Provide at least two numbers separated by spaces.');
 	},
 };
