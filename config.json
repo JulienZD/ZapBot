@@ -1,4 +1,4 @@
 {
-  "prefix": "#",
-  "status": "commands starting with #"
+  "prefix": "!",
+  "status": "commands starting with !"
 }
