@@ -4,9 +4,8 @@ module.exports = {
 	execute(message, args) {
 		let result = 0;
 		const numbers = [];
-		if (!args.length) return this.invalid(message);
+		if (invalidArgs(args)) return this.invalid(message);
 		for (const arg of args) {
-			if (isNaN(arg)) return this.invalid(message);
 			numbers.push(arg);
 			result += parseInt(arg);
 		}
@@ -24,3 +23,10 @@ module.exports = {
 		message.reply('Incorrect usage of command. Provide at least two numbers separated by spaces.');
 	},
 };
+
+function invalidArgs(args) {
+	if (args.length < 2) return true;
+	for (const arg of args) {
+		if (isNaN(arg)) return true;
+	}
+}
