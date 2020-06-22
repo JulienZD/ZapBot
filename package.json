@@ -1,5 +1,5 @@
 {
-  "name": "ZapBot",
+  "name": "zapbot",
   "version": "0.0.1",
   "description": "A simple Discord bot",
   "main": "index.js",
