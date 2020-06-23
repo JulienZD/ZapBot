@@ -1,42 +1,36 @@
+const math = require('mathjs');
+
 module.exports = {
 	name: 'calculate',
-	description: 'todo',
+	description: 'Calculates the given expression(s)',
 	execute(message, args) {
-		if (this.checkInvalid(args)) return;
+		if (!args.length) return this.invalid(message);
 
-		let result = 0;
-		let sumNumbers = '';
+		const calculations = {};
+		let msg = '';
 
 		for (let i = 0; i < args.length; i++) {
-			const number = args[i];
-			sumNumbers += number;
-			if (i !== args.length - 1) {
-				sumNumbers += ' + ';
+			const expression = args[i];
+			let result;
+			try {
+				result = { 'expression': expression, 'result': math.evaluate(expression) };
 			}
-			result += parseInt(number);
+			catch (error) {
+				continue;
+			}
+			calculations[i + 1] = result;
 		}
 
-		message.channel.send(`${sumNumbers} = ${result}`);
+		for (const [num, calc] of Object.entries(calculations)) {
+			const expr = calc['expression'];
+			const result = calc['result'];
+			msg += `Calculation ${num}: ${expr} = ${result}\n`;
+		}
+
+		if (!msg) return this.invalid(message);
+		message.channel.send(msg);
 	},
 	invalid(message) {
-		message.reply('Incorrect usage of command. Provide at least two numbers separated by spaces.');
-	},
-	checkInvalid(args) {
-		if (this.insufficientArgs(args)) return true;
-		if (!this.isOperator(args[0])) return true;
-		if (this.isAllNumbers(args)) return true;
-		return false;
-	},
-	insufficientArgs(args) {
-		return args.length < 3;
-	},
-	isOperator(arg) {
-		return /[*/+-]/.test(arg);
-	},
-	isAllNumbers(args) {
-		for (const arg of args) {
-			if (isNaN(arg)) return false;
-		}
-		return true;
+		message.reply('Incorrect usage of command. Provide at least one arithmetic expression.');
 	},
 };
