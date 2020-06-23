@@ -13,12 +13,13 @@ module.exports = {
 			const expression = args[i];
 			let result;
 			try {
-				result = { 'expression': expression, 'result': math.evaluate(expression) };
+				result = math.evaluate(expression);
 			}
 			catch (error) {
 				continue;
 			}
-			calculations[i + 1] = result;
+			const calculation = { 'expression': expression, 'result': result };
+			calculations[i + 1] = calculation;
 		}
 
 		for (const [num, calc] of Object.entries(calculations)) {
