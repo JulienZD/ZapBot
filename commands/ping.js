@@ -3,6 +3,8 @@ module.exports = {
 	description: 'Ping!',
 	cooldown: 5,
 	execute(message) {
-		message.channel.send('Pong');
+		const createdAt = message.createdAt;
+		const now = Date.now();
+		message.channel.send(`:ping_pong: Pong! \nResponse time: _${now - createdAt}ms_`);
 	},
 };
