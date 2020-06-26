@@ -1,5 +1,6 @@
 {
   "creatorId": "176764390467436544",
   "prefix": "!",
-  "status": "commands starting with !"
+  "status": "commands starting with !",
+  "defaultCooldown": 3
 }

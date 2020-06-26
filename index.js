@@ -1,7 +1,7 @@
 require('./libs/log-timestamps.js').init();
 require('dotenv').config();
 
-const { creatorId, prefix, status } = require('./config.json');
+const { creatorId, prefix, status, defaultCooldown } = require('./config.json');
 const token = process.env.DISCORD_BOT_TOKEN;
 const Discord = require('discord.js');
 
@@ -48,7 +48,7 @@ client.on('message', message => {
 
 	const now = Date.now();
 	const timestamps = cooldowns.get(command.name);
-	const cooldownAmount = (command.cooldown || 3) * 1000;
+	const cooldownAmount = (command.cooldown || defaultCooldown) * 1000;
 
 	if (timestamps.has(message.author.id)) {
 		const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
