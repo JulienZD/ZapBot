@@ -2,5 +2,6 @@
   "creatorId": "176764390467436544",
   "prefix": "!",
   "status": "commands starting with !",
-  "defaultCooldown": 3
+  "defaultCooldown": 3,
+  "iconURL": "https://i.imgur.com/beKuLLM.png"
 }
