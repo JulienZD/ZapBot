@@ -1,4 +1,4 @@
-require('./libs/logTimestamps.js').init();
+require('./libs/log-timestamps.js').init();
 require('dotenv').config();
 
 const fs = require('fs');
