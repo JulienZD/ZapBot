@@ -1,4 +1,4 @@
-const { prefix } = require('../config.json');
+const { prefix, defaultCooldown } = require('../config.json');
 const Discord = require('discord.js');
 
 module.exports = {
@@ -38,13 +38,17 @@ module.exports = {
 			.setColor('#ffffff')
 			// Bot icon
 			.setThumbnail('https://i.imgur.com/beKuLLM.png')
-			.setTitle(`Command: \`${prefix}${command.name}\``);
+			.setTitle(`Command: \`${command.name}\``);
 
 		if (command.description) commandEmbed.addField('Description', command.description);
 		if (command.aliases) commandEmbed.addField('Aliases', command.aliases.join(', '));
-		if (command.usage) commandEmbed.addField('Usage', `\`${prefix}${command.name} ${command.usage}\``);
 
-		commandEmbed.addField('Cooldown', `${command.cooldown || 3} second(s)`);
+		let usageString = `\`${prefix}${command.name}`;
+		if (command.usage) usageString += ` ${command.usage}`;
+		usageString += '`';
+
+		commandEmbed.addField('Usage', usageString);
+		commandEmbed.addField('Cooldown', `${command.cooldown || defaultCooldown} second(s)`);
 
 		message.channel.send(commandEmbed);
 	},
