@@ -36,6 +36,7 @@ module.exports = {
 
 		const commandEmbed = new Discord.MessageEmbed()
 			.setColor('#ffffff')
+			// Bot icon
 			.setThumbnail('https://i.imgur.com/beKuLLM.png')
 			.setTitle(`Command: \`${prefix}${command.name}\``);
 
