@@ -1,7 +1,7 @@
 require('dotenv').config();
 
 const fs = require('fs');
-const { prefix, status } = require('./config.json');
+const { creatorId, prefix, status } = require('./config.json');
 const token = process.env.DISCORD_BOT_TOKEN;
 const Discord = require('discord.js');
 
@@ -35,6 +35,8 @@ client.on('message', message => {
 		|| client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 
 	if (!command) return;
+
+	if (command.creatorOnly && message.author.id !== creatorId) return message.reply('This command is not available to you.');
 
 	if (command.args && !args.length) {
 		let reply = `No arguments provided for \`${command.name}\` command.`;
