@@ -1,20 +1,13 @@
 require('./libs/log-timestamps.js').init();
 require('dotenv').config();
 
-const fs = require('fs');
 const { creatorId, prefix, status } = require('./config.json');
 const token = process.env.DISCORD_BOT_TOKEN;
 const Discord = require('discord.js');
 
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
-
-const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
-
-for (const file of commandFiles) {
-	const command = require(`./commands/${file}`);
-	client.commands.set(command.name, command);
-}
+require('./libs/load-commands.js').load('./commands', client.commands);
 
 const cooldowns = new Discord.Collection();
 
