@@ -48,7 +48,7 @@ function sendAllCommandsHelp(message) {
 		.setTitle('Commands')
 		.setThumbnail('https://i.imgur.com/beKuLLM.png');
 
-	embed.setDescription(commands.map(command => command.name).join('\n'));
+	embed.setDescription(commands.map(command => `${prefix}${command.name}: ${command.description || ''}`).join('\n'));
 	embed.setFooter(`You can send \`${prefix}help [command name]\` to get info on a specific command!`);
 
 	return message.author.send(embed)
