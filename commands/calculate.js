@@ -2,6 +2,7 @@ const math = require('mathjs');
 
 module.exports = {
 	name: 'calculate',
+	aliases: ['calc'],
 	description: 'Calculates the given expression(s)',
 	args: true,
 	usage: '<expression1> [expression2] [expression3] ...',
