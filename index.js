@@ -34,7 +34,13 @@ client.on('message', message => {
 	const command = client.commands.get(commandName);
 
 	if (command.args && !args.length) {
-		return message.channel.send(`No arguments provided for command \`${commandName}\`.`);
+		let reply = `No arguments provided for \`${command.name}\`.`;
+
+		if (command.usage) {
+			reply += `\nUsage: \`${prefix}${command.name} ${command.usage}\``;
+		}
+
+		return message.channel.send(reply);
 	}
 
 	try {

@@ -4,6 +4,7 @@ module.exports = {
 	name: 'calculate',
 	description: 'Calculates the given expression(s)',
 	args: true,
+	usage: '<expression1> [expression2] [expression3] ...',
 	execute(message, args) {
 		const calculations = {};
 		let msg = '';
