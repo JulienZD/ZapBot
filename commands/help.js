@@ -1,4 +1,5 @@
 const { prefix } = require('../config.json');
+const Discord = require('discord.js');
 
 module.exports = {
 	name: 'help',
@@ -33,14 +34,17 @@ module.exports = {
 			return message.reply('that\'s not a valid command.');
 		}
 
-		data.push(`**Name:** ${command.name}`);
+		const commandEmbed = new Discord.MessageEmbed()
+			.setColor('#ffffff')
+			.setThumbnail('https://i.imgur.com/beKuLLM.png')
+			.setTitle(`Command: \`${prefix}${command.name}\``);
 
-		if (command.aliases) data.push(`**Aliases:** ${command.aliases.join(', ')}`);
-		if (command.description) data.push(`**Description:** ${command.description}`);
-		if (command.usage) data.push(`**Usage:** ${prefix}${command.name} ${command.usage}`);
+		if (command.description) commandEmbed.addField('Description', command.description);
+		if (command.aliases) commandEmbed.addField('Aliases', command.aliases.join(', '));
+		if (command.usage) commandEmbed.addField('Usage', `\`${prefix}${command.name} ${command.usage}\``);
 
-		data.push(`**Cooldown:** ${command.cooldown || 3} second(s)`);
+		commandEmbed.addField('Cooldown', `${command.cooldown || 3} second(s)`);
 
-		message.channel.send(data, { split: true });
+		message.channel.send(commandEmbed);
 	},
 };
