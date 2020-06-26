@@ -2,6 +2,7 @@ const loadCommands = require('../libs/load-commands.js');
 
 module.exports = {
 	name: 'reload',
+	aliases: ['rl'],
 	description: 'Reloads all commands',
 	creatorOnly: true,
 	execute(message) {
