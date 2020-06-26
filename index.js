@@ -17,7 +17,16 @@ client.on('ready', () => {
 	client.user.setActivity(status, { type: 'LISTENING' })
 		.then(presence => console.log(`Status set to "${presence.activities[0].name}"`))
 		.catch(console.error);
+	initZapBot();
 });
+
+async function initZapBot() {
+	const ZapBot = require('./objects/ZapBot');
+	const mgr = new Discord.UserManager(client);
+	const user = await mgr.fetch(creatorId);
+	ZapBot.ZapMessageEmbed.creditField.value = `_ZapBot created by ${user.toString()}_`;
+	console.log('ZapBot initialized');
+}
 
 client.on('message', message => {
 	if (!message.content.startsWith(prefix) || message.author.bot) return;
