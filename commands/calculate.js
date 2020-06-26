@@ -3,9 +3,8 @@ const math = require('mathjs');
 module.exports = {
 	name: 'calculate',
 	description: 'Calculates the given expression(s)',
+	args: true,
 	execute(message, args) {
-		if (!args.length) return this.invalid(message);
-
 		const calculations = {};
 		let msg = '';
 
