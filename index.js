@@ -1,4 +1,5 @@
 require('dotenv').config();
+initConsoleLogTimeStamps();
 
 const fs = require('fs');
 const { creatorId, prefix, status } = require('./config.json');
@@ -78,3 +79,11 @@ client.on('message', message => {
 
 
 client.login(token);
+
+function initConsoleLogTimeStamps() {
+	console.logCopy = console.log.bind(console);
+	console.log = function(data) {
+		const currentDate = '[' + new Date().toUTCString() + ']:';
+		this.logCopy(currentDate, data);
+	};
+}
