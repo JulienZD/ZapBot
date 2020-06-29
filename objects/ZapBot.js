@@ -1,15 +1,15 @@
 const Discord = require('discord.js');
-const { creatorId, iconURL } = require('../config.json');
+const { creatorId: CREATOR_ID, iconURL: ICON_URL } = require('../config.json');
 
 class ZapMessageEmbed extends Discord.MessageEmbed {
 	static creditField = {
 		name: '\u200b',
 		// Fallback to creatorId if initialization in index.js fails
-		value: `_ZapBot created by @${creatorId}_`,
+		value: `_ZapBot created by @${CREATOR_ID}_`,
 	}
 	constructor() {
 		super();
-		super.setThumbnail(iconURL)
+		super.setThumbnail(ICON_URL)
 			.addField(ZapMessageEmbed.creditField.name, ZapMessageEmbed.creditField.value);
 	}
 	addField(name, value, inline) {

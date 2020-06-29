@@ -1,4 +1,4 @@
-const { prefix, defaultCooldown } = require('../config.json');
+const { prefix: PREFIX, defaultCooldown: DEFAULT_COOLDOWN } = require('../config.json');
 const Discord = require('discord.js');
 
 module.exports = {
@@ -32,12 +32,12 @@ function sendCommandHelp(message, command) {
 	if (command.description) commandEmbed.addField('Description', command.description);
 	if (command.aliases) commandEmbed.addField('Aliases', command.aliases.join(', '));
 
-	let usageString = `\`${prefix}${command.name}`;
+	let usageString = `\`${PREFIX}${command.name}`;
 	if (command.usage) usageString += ` ${command.usage}`;
 	usageString += '`';
 
 	commandEmbed.addField('Usage', usageString);
-	commandEmbed.addField('Cooldown', `${command.cooldown || defaultCooldown} second(s)`);
+	commandEmbed.addField('Cooldown', `${command.cooldown || DEFAULT_COOLDOWN} second(s)`);
 
 	message.channel.send(commandEmbed);
 }
@@ -48,8 +48,8 @@ function sendAllCommandsHelp(message) {
 		.setTitle('Commands')
 		.setThumbnail('https://i.imgur.com/beKuLLM.png');
 
-	embed.setDescription(commands.map(command => `${prefix}${command.name}: ${command.description || ''}`).join('\n'));
-	embed.setFooter(`You can send \`${prefix}help [command name]\` to get info on a specific command!`);
+	embed.setDescription(commands.map(command => `${PREFIX}${command.name}: ${command.description || ''}`).join('\n'));
+	embed.setFooter(`You can send \`${PREFIX}help [command name]\` to get info on a specific command!`);
 
 	return message.author.send(embed)
 		.then(() => {
