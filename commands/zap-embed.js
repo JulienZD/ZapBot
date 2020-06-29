@@ -5,7 +5,7 @@ module.exports = {
 	aliases: ['zembed'],
 	creatorOnly: true,
 	execute(message) {
-		const embed = new ZapEmbed.ZapMessageEmbed(message.client);
+		let embed = new ZapEmbed.ZapMessageEmbed(message.client);
 		for (let i = 1; i <= 10; i++) {
 			embed.addField(`FieldName${i}`, `FieldValue${i}`);
 		}

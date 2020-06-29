@@ -1,20 +1,19 @@
 require('./libs/log-timestamps.js').init();
 require('dotenv').config();
 
-const { creatorId, prefix, status, defaultCooldown } = require('./config.json');
-const token = process.env.DISCORD_BOT_TOKEN;
+const { creatorId: CREATOR_ID, prefix: PREFIX, status: STATUS, defaultCooldown: DEFAULT_COOLDOWN } = require('./config.json');
 const Discord = require('discord.js');
 
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
 require('./libs/load-commands.js').load('./commands', client.commands);
 
-const cooldowns = new Discord.Collection();
+const COOLDOWNS = new Discord.Collection();
 
 client.on('ready', () => {
 	console.log(`Logged in as ${client.user.tag}`);
 
-	client.user.setActivity(status, { type: 'LISTENING' })
+	client.user.setActivity(STATUS, { type: 'LISTENING' })
 		.then(presence => console.log(`Status set to "${presence.activities[0].name}"`))
 		.catch(console.error);
 	initZapBot();
@@ -22,48 +21,48 @@ client.on('ready', () => {
 
 async function initZapBot() {
 	const ZapBot = require('./objects/ZapBot');
-	const mgr = new Discord.UserManager(client);
-	const user = await mgr.fetch(creatorId);
+	let mgr = new Discord.UserManager(client);
+	let user = await mgr.fetch(CREATOR_ID);
 	ZapBot.ZapMessageEmbed.creditField.value = `_ZapBot created by ${user.toString()}_`;
 	console.log('ZapBot initialized');
 }
 
 client.on('message', message => {
-	if (!message.content.startsWith(prefix) || message.author.bot) return;
+	if (!message.content.startsWith(PREFIX) || message.author.bot) return;
 
-	const args = message.content.slice(prefix.length).split(/ +/);
-	const commandName = args.shift().toLowerCase();
+	let args = message.content.slice(PREFIX.length).split(/ +/);
+	let commandName = args.shift().toLowerCase();
 
-	const command = client.commands.get(commandName)
+	let command = client.commands.get(commandName)
 		|| client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 
 	if (!command) return;
 
-	if (command.creatorOnly && message.author.id !== creatorId) return message.reply('This command is not available to you.');
+	if (command.creatorOnly && message.author.id !== CREATOR_ID) return message.reply('This command is not available to you.');
 
 	if (command.args && !args.length) {
 		let reply = `No arguments provided for \`${command.name}\` command.`;
 
 		if (command.usage) {
-			reply += `\nUsage: \`${prefix}${command.name} ${command.usage}\``;
+			reply += `\nUsage: \`${PREFIX}${command.name} ${command.usage}\``;
 		}
 
 		return message.channel.send(reply);
 	}
 
-	if (!cooldowns.has(command.name)) {
-		cooldowns.set(command.name, new Discord.Collection());
+	if (!COOLDOWNS.has(command.name)) {
+		COOLDOWNS.set(command.name, new Discord.Collection());
 	}
 
-	const now = Date.now();
-	const timestamps = cooldowns.get(command.name);
-	const cooldownAmount = (command.cooldown || defaultCooldown) * 1000;
+	let now = Date.now();
+	let timestamps = COOLDOWNS.get(command.name);
+	let cooldownAmount = (command.cooldown || DEFAULT_COOLDOWN) * 1000;
 
 	if (timestamps.has(message.author.id)) {
-		const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
+		let expirationTime = timestamps.get(message.author.id) + cooldownAmount;
 
 		if (now < expirationTime) {
-			const timeLeft = (expirationTime - now) / 1000;
+			let timeLeft = (expirationTime - now) / 1000;
 			return message.reply(`Please wait another ${timeLeft.toFixed(1)} second(s) before reusing the \`${command.name}\` command.`);
 		}
 	}
@@ -87,4 +86,4 @@ client.on('shardError', error => {
 	console.error('A websocket connection encountered an error:', error);
 });
 
-client.login(token);
+client.login(process.env.DISCORD_BOT_TOKEN);

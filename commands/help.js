@@ -1,4 +1,4 @@
-const { prefix, defaultCooldown } = require('../config.json');
+const { prefix: PREFIX, defaultCooldown: DEFAULT_COOLDOWN } = require('../config.json');
 const Discord = require('discord.js');
 
 module.exports = {
@@ -12,9 +12,9 @@ module.exports = {
 			sendAllCommandsHelp(message);
 			return;
 		}
-		const { commands } = message.client;
-		const name = args[0].toLowerCase();
-		const command = commands.get(name) || commands.find(c => c.aliases && c.aliases.includes(name));
+		let { commands } = message.client;
+		let name = args[0].toLowerCase();
+		let command = commands.get(name) || commands.find(c => c.aliases && c.aliases.includes(name));
 		sendCommandHelp(message, command);
 	},
 };
@@ -23,7 +23,7 @@ function sendCommandHelp(message, command) {
 	if (!command) {
 		return message.reply('that\'s not a valid command.');
 	}
-	const commandEmbed = new Discord.MessageEmbed()
+	let commandEmbed = new Discord.MessageEmbed()
 		.setColor('#ffffff')
 		// Bot icon
 		.setThumbnail('https://i.imgur.com/beKuLLM.png')
@@ -32,24 +32,24 @@ function sendCommandHelp(message, command) {
 	if (command.description) commandEmbed.addField('Description', command.description);
 	if (command.aliases) commandEmbed.addField('Aliases', command.aliases.join(', '));
 
-	let usageString = `\`${prefix}${command.name}`;
+	let usageString = `\`${PREFIX}${command.name}`;
 	if (command.usage) usageString += ` ${command.usage}`;
 	usageString += '`';
 
 	commandEmbed.addField('Usage', usageString);
-	commandEmbed.addField('Cooldown', `${command.cooldown || defaultCooldown} second(s)`);
+	commandEmbed.addField('Cooldown', `${command.cooldown || DEFAULT_COOLDOWN} second(s)`);
 
 	message.channel.send(commandEmbed);
 }
 
 function sendAllCommandsHelp(message) {
-	const { commands } = message.client;
-	const embed = new Discord.MessageEmbed()
+	let { commands } = message.client;
+	let embed = new Discord.MessageEmbed()
 		.setTitle('Commands')
 		.setThumbnail('https://i.imgur.com/beKuLLM.png');
 
-	embed.setDescription(commands.map(command => `${prefix}${command.name}: ${command.description || ''}`).join('\n'));
-	embed.setFooter(`You can send \`${prefix}help [command name]\` to get info on a specific command!`);
+	embed.setDescription(commands.map(command => `${PREFIX}${command.name}: ${command.description || ''}`).join('\n'));
+	embed.setFooter(`You can send \`${PREFIX}help [command name]\` to get info on a specific command!`);
 
 	return message.author.send(embed)
 		.then(() => {
