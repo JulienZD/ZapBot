@@ -13,7 +13,7 @@ module.exports = {
 			console.log(error);
 			return message.channel.send('An error occurred while reloading all the commands.');
 		}
-		console.log('Reloaded all commands');
+		console.log(`Reloaded all commands - ${message.author.tag}`);
 		message.channel.send('Reloaded all commands.');
 	},
 };
