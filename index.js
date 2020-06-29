@@ -2,7 +2,6 @@ require('./libs/log-timestamps.js').init();
 require('dotenv').config();
 
 const { creatorId: CREATOR_ID, prefix: PREFIX, status: STATUS, defaultCooldown: DEFAULT_COOLDOWN } = require('./config.json');
-const TOKEN = process.env.DISCORD_BOT_TOKEN;
 const Discord = require('discord.js');
 
 const CLIENT = new Discord.Client();
@@ -87,4 +86,4 @@ CLIENT.on('shardError', error => {
 	console.error('A websocket connection encountered an error:', error);
 });
 
-CLIENT.login(TOKEN);
+CLIENT.login(process.env.DISCORD_BOT_TOKEN);
