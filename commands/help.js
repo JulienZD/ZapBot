@@ -12,9 +12,9 @@ module.exports = {
 			sendAllCommandsHelp(message);
 			return;
 		}
-		const { commands } = message.client;
-		const name = args[0].toLowerCase();
-		const command = commands.get(name) || commands.find(c => c.aliases && c.aliases.includes(name));
+		let { commands } = message.client;
+		let name = args[0].toLowerCase();
+		let command = commands.get(name) || commands.find(c => c.aliases && c.aliases.includes(name));
 		sendCommandHelp(message, command);
 	},
 };
@@ -23,7 +23,7 @@ function sendCommandHelp(message, command) {
 	if (!command) {
 		return message.reply('that\'s not a valid command.');
 	}
-	const commandEmbed = new Discord.MessageEmbed()
+	let commandEmbed = new Discord.MessageEmbed()
 		.setColor('#ffffff')
 		// Bot icon
 		.setThumbnail('https://i.imgur.com/beKuLLM.png')
@@ -43,8 +43,8 @@ function sendCommandHelp(message, command) {
 }
 
 function sendAllCommandsHelp(message) {
-	const { commands } = message.client;
-	const embed = new Discord.MessageEmbed()
+	let { commands } = message.client;
+	let embed = new Discord.MessageEmbed()
 		.setTitle('Commands')
 		.setThumbnail('https://i.imgur.com/beKuLLM.png');
 

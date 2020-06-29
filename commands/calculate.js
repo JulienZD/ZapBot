@@ -7,11 +7,11 @@ module.exports = {
 	args: true,
 	usage: '<expression1> [expression2] [expression3] ...',
 	execute(message, args) {
-		const calculations = {};
+		let calculations = {};
 		let msg = '';
 
 		for (let i = 0; i < args.length; i++) {
-			const expression = args[i];
+			let expression = args[i];
 			let result;
 			try {
 				result = math.evaluate(expression);
@@ -19,13 +19,13 @@ module.exports = {
 			catch (error) {
 				continue;
 			}
-			const calculation = { 'expression': expression, 'result': result };
+			let calculation = { 'expression': expression, 'result': result };
 			calculations[i + 1] = calculation;
 		}
 
 		for (const [num, calc] of Object.entries(calculations)) {
-			const expr = calc['expression'];
-			const result = calc['result'];
+			let expr = calc['expression'];
+			let result = calc['result'];
 			msg += `Calculation ${num}: ${expr} = ${result}\n`;
 		}
 

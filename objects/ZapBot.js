@@ -24,7 +24,7 @@ class ZapMessageEmbed extends Discord.MessageEmbed {
 		return this;
 	}
 	moveCreditFieldToEnd() {
-		const data = this.fields;
+		let data = this.fields;
 		data.push(data.splice(data.findIndex(f => f.value === ZapMessageEmbed.creditField.value), 1)[0]);
 	}
 }

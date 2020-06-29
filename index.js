@@ -21,8 +21,8 @@ CLIENT.on('ready', () => {
 
 async function initZapBot() {
 	const ZapBot = require('./objects/ZapBot');
-	const mgr = new Discord.UserManager(CLIENT);
-	const user = await mgr.fetch(CREATOR_ID);
+	let mgr = new Discord.UserManager(CLIENT);
+	let user = await mgr.fetch(CREATOR_ID);
 	ZapBot.ZapMessageEmbed.creditField.value = `_ZapBot created by ${user.toString()}_`;
 	console.log('ZapBot initialized');
 }
@@ -30,10 +30,10 @@ async function initZapBot() {
 CLIENT.on('message', message => {
 	if (!message.content.startsWith(PREFIX) || message.author.bot) return;
 
-	const args = message.content.slice(PREFIX.length).split(/ +/);
-	const commandName = args.shift().toLowerCase();
+	let args = message.content.slice(PREFIX.length).split(/ +/);
+	let commandName = args.shift().toLowerCase();
 
-	const command = CLIENT.commands.get(commandName)
+	let command = CLIENT.commands.get(commandName)
 		|| CLIENT.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 
 	if (!command) return;
@@ -54,15 +54,15 @@ CLIENT.on('message', message => {
 		COOLDOWNS.set(command.name, new Discord.Collection());
 	}
 
-	const now = Date.now();
-	const timestamps = COOLDOWNS.get(command.name);
-	const cooldownAmount = (command.cooldown || DEFAULT_COOLDOWN) * 1000;
+	let now = Date.now();
+	let timestamps = COOLDOWNS.get(command.name);
+	let cooldownAmount = (command.cooldown || DEFAULT_COOLDOWN) * 1000;
 
 	if (timestamps.has(message.author.id)) {
-		const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
+		let expirationTime = timestamps.get(message.author.id) + cooldownAmount;
 
 		if (now < expirationTime) {
-			const timeLeft = (expirationTime - now) / 1000;
+			let timeLeft = (expirationTime - now) / 1000;
 			return message.reply(`Please wait another ${timeLeft.toFixed(1)} second(s) before reusing the \`${command.name}\` command.`);
 		}
 	}
