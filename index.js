@@ -4,16 +4,16 @@ require('dotenv').config();
 const { creatorId: CREATOR_ID, prefix: PREFIX, status: STATUS, defaultCooldown: DEFAULT_COOLDOWN } = require('./config.json');
 const Discord = require('discord.js');
 
-const CLIENT = new Discord.Client();
-CLIENT.commands = new Discord.Collection();
-require('./libs/load-commands.js').load('./commands', CLIENT.commands);
+const client = new Discord.Client();
+client.commands = new Discord.Collection();
+require('./libs/load-commands.js').load('./commands', client.commands);
 
 const COOLDOWNS = new Discord.Collection();
 
-CLIENT.on('ready', () => {
-	console.log(`Logged in as ${CLIENT.user.tag}`);
+client.on('ready', () => {
+	console.log(`Logged in as ${client.user.tag}`);
 
-	CLIENT.user.setActivity(STATUS, { type: 'LISTENING' })
+	client.user.setActivity(STATUS, { type: 'LISTENING' })
 		.then(presence => console.log(`Status set to "${presence.activities[0].name}"`))
 		.catch(console.error);
 	initZapBot();
@@ -21,20 +21,20 @@ CLIENT.on('ready', () => {
 
 async function initZapBot() {
 	const ZapBot = require('./objects/ZapBot');
-	let mgr = new Discord.UserManager(CLIENT);
+	let mgr = new Discord.UserManager(client);
 	let user = await mgr.fetch(CREATOR_ID);
 	ZapBot.ZapMessageEmbed.creditField.value = `_ZapBot created by ${user.toString()}_`;
 	console.log('ZapBot initialized');
 }
 
-CLIENT.on('message', message => {
+client.on('message', message => {
 	if (!message.content.startsWith(PREFIX) || message.author.bot) return;
 
 	let args = message.content.slice(PREFIX.length).split(/ +/);
 	let commandName = args.shift().toLowerCase();
 
-	let command = CLIENT.commands.get(commandName)
-		|| CLIENT.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
+	let command = client.commands.get(commandName)
+		|| client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 
 	if (!command) return;
 
@@ -82,8 +82,8 @@ process.on('unhandledRejection', error => {
 	console.error('Unhandled promise rejection:', error);
 });
 
-CLIENT.on('shardError', error => {
+client.on('shardError', error => {
 	console.error('A websocket connection encountered an error:', error);
 });
 
-CLIENT.login(process.env.DISCORD_BOT_TOKEN);
+client.login(process.env.DISCORD_BOT_TOKEN);
