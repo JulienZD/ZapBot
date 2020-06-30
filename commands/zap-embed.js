@@ -1,4 +1,4 @@
-const ZapEmbed = require('../objects/ZapBot');
+const ZapEmbed = require('../ZapBot/ZapMessageEmbed');
 
 module.exports = {
 	name: 'zap-embed',

@@ -1,5 +1,5 @@
-const { prefix: PREFIX, defaultCooldown: DEFAULT_COOLDOWN } = require('../config.json');
 const Discord = require('discord.js');
+let config;
 
 module.exports = {
 	name: 'help',
@@ -8,6 +8,8 @@ module.exports = {
 	usage: '[command name]',
 	cooldown: 5,
 	execute(message, args) {
+		config = message.client.config;
+
 		if(!args.length) {
 			sendAllCommandsHelp(message);
 			return;
@@ -23,6 +25,7 @@ function sendCommandHelp(message, command) {
 	if (!command) {
 		return message.reply('that\'s not a valid command.');
 	}
+
 	let commandEmbed = new Discord.MessageEmbed()
 		.setColor('#ffffff')
 		// Bot icon
@@ -32,12 +35,12 @@ function sendCommandHelp(message, command) {
 	if (command.description) commandEmbed.addField('Description', command.description);
 	if (command.aliases) commandEmbed.addField('Aliases', command.aliases.join(', '));
 
-	let usageString = `\`${PREFIX}${command.name}`;
+	let usageString = `\`${config.prefix}${command.name}`;
 	if (command.usage) usageString += ` ${command.usage}`;
 	usageString += '`';
 
 	commandEmbed.addField('Usage', usageString);
-	commandEmbed.addField('Cooldown', `${command.cooldown || DEFAULT_COOLDOWN} second(s)`);
+	commandEmbed.addField('Cooldown', `${command.cooldown || config.defaultCooldown} second(s)`);
 
 	message.channel.send(commandEmbed);
 }
@@ -48,8 +51,8 @@ function sendAllCommandsHelp(message) {
 		.setTitle('Commands')
 		.setThumbnail('https://i.imgur.com/beKuLLM.png');
 
-	embed.setDescription(commands.map(command => `${PREFIX}${command.name}: ${command.description || ''}`).join('\n'));
-	embed.setFooter(`You can send \`${PREFIX}help [command name]\` to get info on a specific command!`);
+	embed.setDescription(commands.map(command => `${config.prefix}${command.name}: ${command.description || ''}`).join('\n'));
+	embed.setFooter(`You can send \`${config.prefix}help [command name]\` to get info on a specific command!`);
 
 	return message.author.send(embed)
 		.then(() => {

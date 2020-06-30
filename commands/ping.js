@@ -1,10 +1,14 @@
 module.exports = {
 	name: 'ping',
 	description: 'Ping!',
+	aliases: ['p'],
 	cooldown: 5,
 	execute(message) {
-		let createdAt = message.createdAt;
-		let now = Date.now();
-		message.channel.send(`:ping_pong: Pong! \nResponse time: _${now - createdAt}ms_`);
+		message.channel.send('Pong!')
+			.then(msg => {
+				let ping = msg.createdAt - message.createdAt;
+				msg.edit(`${msg.content}\nResponse time: _${ping}ms_`);
+				msg.react('🏓');
+			});
 	},
 };
