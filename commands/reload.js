@@ -1,4 +1,4 @@
-const loadCommands = require('../libs/load-commands.js');
+const loadCommands = require('../libs/load-commands');
 
 module.exports = {
 	name: 'reload',

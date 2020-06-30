@@ -1,4 +1,4 @@
-require('./libs/log-timestamps.js').init();
+require('./libs/log-timestamps').init();
 require('dotenv').config();
 
 const { creatorId: CREATOR_ID, prefix: PREFIX, status: STATUS, defaultCooldown: DEFAULT_COOLDOWN } = require('./config.json');
@@ -6,7 +6,7 @@ const Discord = require('discord.js');
 
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
-require('./libs/load-commands.js').load('./commands', client.commands);
+require('./libs/load-commands').load('./commands', client.commands);
 
 const COOLDOWNS = new Discord.Collection();
 
