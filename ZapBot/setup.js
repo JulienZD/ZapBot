@@ -1,4 +1,3 @@
-const { creatorId: CREATOR_ID } = require('../config.json');
 const Discord = require('discord.js');
 
 let client;
@@ -23,7 +22,7 @@ function loadCommands() {
 async function initZapBot() {
 	const ZapBot = require('../objects/ZapBot');
 	let mgr = new Discord.UserManager(client);
-	let user = await mgr.fetch(CREATOR_ID);
+	let user = await mgr.fetch(client.config.creatorId);
 	ZapBot.ZapMessageEmbed.creditField.value = `_ZapBot created by ${user.toString()}_`;
 	console.log('ZapBot initialized');
 }

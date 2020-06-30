@@ -1,10 +1,10 @@
 require('./libs/log-timestamps').init();
 require('dotenv').config();
-const { init, initZapBot } = require('./ZapBot/setup');
+const { init } = require('./ZapBot/setup');
 
-const { status: STATUS } = require('./config.json');
 const Discord = require('discord.js');
 const client = new Discord.Client();
+client.config = require('./config.json');
 
 main();
 
@@ -15,4 +15,3 @@ function main() {
 	client.on('message', require('./events/message').bind(null, client));
 	client.login(process.env.DISCORD_BOT_TOKEN);
 }
-

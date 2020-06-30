@@ -1,12 +1,14 @@
 // Thanks @AnIdiotsGuide: https://github.com/AnIdiotsGuide/discordjs-bot-guide/blob/master/first-bot/a-basic-command-handler.md#our-first-event-message
 
 const Discord = require('discord.js');
-const { prefix: PREFIX, creatorId: CREATOR_ID, defaultCooldown: DEFAULT_COOLDOWN } = require('../config.json');
 const COOLDOWNS = new Discord.Collection();
+let config;
 
 module.exports = (client, message) => {
-	if (!message.content.startsWith(PREFIX) || message.author.bot) return;
-	let args = message.content.slice(PREFIX.length).split(/ +/);
+	config = client.config;
+
+	if (!message.content.startsWith(config.prefix) || message.author.bot) return;
+	let args = message.content.slice(config.prefix.length).split(/ +/);
 	let commandName = args.shift().toLowerCase();
 
 	let command = client.commands.get(commandName)
@@ -14,13 +16,13 @@ module.exports = (client, message) => {
 
 	if (!command) return;
 
-	if (command.creatorOnly && message.author.id !== CREATOR_ID) return message.reply('This command is not available to you.');
+	if (command.creatorOnly && message.author.id !== config.creatorId) return message.reply('This command is not available to you.');
 
 	if (command.args && !args.length) {
 		let reply = `No arguments provided for \`${command.name}\` command.`;
 
 		if (command.usage) {
-			reply += `\nUsage: \`${PREFIX}${command.name} ${command.usage}\``;
+			reply += `\nUsage: \`${config.prefix}${command.name} ${command.usage}\``;
 		}
 
 		return message.channel.send(reply);
@@ -32,7 +34,7 @@ module.exports = (client, message) => {
 
 	let now = Date.now();
 	let timestamps = COOLDOWNS.get(command.name);
-	let cooldownAmount = (command.cooldown || DEFAULT_COOLDOWN) * 1000;
+	let cooldownAmount = (command.cooldown || config.defaultCooldown) * 1000;
 
 	if (timestamps.has(message.author.id)) {
 		let expirationTime = timestamps.get(message.author.id) + cooldownAmount;
