@@ -20,10 +20,10 @@ function loadCommands() {
 }
 
 async function initZapBot() {
-	const ZapBot = require('../objects/ZapBot');
+	const ZapMessageEmbed = require('./ZapMessageEmbed').ZapMessageEmbed;
 	let mgr = new Discord.UserManager(client);
 	let user = await mgr.fetch(client.config.creatorId);
-	ZapBot.ZapMessageEmbed.creditField.value = `_ZapBot created by ${user.toString()}_`;
+	ZapMessageEmbed.creditField.value = `_ZapBot created by ${user.toString()}_`;
 	console.log('ZapBot initialized');
 }
 
