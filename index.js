@@ -11,15 +11,8 @@ main();
 function main() {
 	init(client);
 
-	client.on('ready', () => startClient());
+	client.on('ready', require('./events/ready').bind(null, client));
+	client.on('message', require('./events/message').bind(null, client));
 	client.login(process.env.DISCORD_BOT_TOKEN);
 }
 
-function startClient() {
-	initZapBot();
-	console.log(`Logged in as ${client.user.tag}`);
-
-	client.user.setActivity(STATUS, { type: 'LISTENING' })
-		.then(presence => console.log(`Status set to "${presence.activities[0].name}"`))
-		.catch(console.error);
-}

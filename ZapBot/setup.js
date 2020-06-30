@@ -1,5 +1,4 @@
 const { creatorId: CREATOR_ID } = require('../config.json');
-const { handle: handleMessages } = require('./message-handler');
 const Discord = require('discord.js');
 
 let client;
@@ -8,7 +7,6 @@ function init(theClient) {
 	client = theClient;
 	handleErrors();
 	loadCommands();
-	handleMessages(client);
 }
 
 function handleErrors() {
