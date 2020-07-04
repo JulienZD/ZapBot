@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+const { ZapMessageEmbed } = require('../ZapBot/ZapMessageEmbed');
 let config;
 
 module.exports = {
@@ -26,10 +27,7 @@ function sendCommandHelp(message, command) {
 		return message.reply('that\'s not a valid command.');
 	}
 
-	let commandEmbed = new Discord.MessageEmbed()
-		.setColor('#ffffff')
-		// Bot icon
-		.setThumbnail('https://i.imgur.com/beKuLLM.png')
+	let commandEmbed = new ZapMessageEmbed()
 		.setTitle(`Command: \`${command.name}\``);
 
 	if (command.description) commandEmbed.addField('Description', command.description);
@@ -47,9 +45,8 @@ function sendCommandHelp(message, command) {
 
 function sendAllCommandsHelp(message) {
 	let { commands } = message.client;
-	let embed = new Discord.MessageEmbed()
-		.setTitle('Commands')
-		.setThumbnail('https://i.imgur.com/beKuLLM.png');
+	let embed = new ZapMessageEmbed()
+		.setTitle('Commands');
 
 	embed.setDescription(commands.map(command => `${config.prefix}${command.name}: ${command.description || ''}`).join('\n'));
 	embed.setFooter(`You can send \`${config.prefix}help [command name]\` to get info on a specific command!`);
