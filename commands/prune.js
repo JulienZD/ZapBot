@@ -6,7 +6,7 @@ module.exports = {
 	args: true,
 	usage: '<amount>',
 	execute(message, args) {
-		const amount = parseInt(args[0] + 1); // Avoid pruning the sent message
+		const amount = parseInt(args[0]) + 1; // Avoid pruning the sent message
 		if (isNaN(amount)) return message.reply('please enter a number.');
 
 		if (amount < 2 || amount > 100) {
