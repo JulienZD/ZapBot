@@ -48,6 +48,13 @@ function isOnCooldown() {
 	setTimeout(() => timestamps.delete(msg.author.id), cooldownAmount);
 }
 
+function permissionsMissing() {
+	if (!command.permissions) return;
+
+	let botGuildMember = msg.guild.member(client.user);
+	if (!botGuildMember.hasPermission(command.permissions))	return msg.channel.send('I don\'t have the right permissions to execute that command!');
+}
+
 module.exports = (theClient, message) => {
 	client = theClient;
 	config = client.config;
@@ -62,6 +69,8 @@ module.exports = (theClient, message) => {
 	if (creatorOnly()) return;
 
 	if (invalidArgs()) return;
+
+	if (permissionsMissing()) return;
 
 	if (isOnCooldown()) return;
 

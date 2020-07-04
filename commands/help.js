@@ -1,11 +1,12 @@
 const Discord = require('discord.js');
+const { ZapMessageEmbed } = require('../ZapBot/ZapMessageEmbed');
 let config;
 
 module.exports = {
 	name: 'help',
 	description: 'List all commands or info about a specific command.',
 	aliases: ['commands', '?'],
-	usage: '[command name]',
+	usage: '[command name [-perms]]',
 	cooldown: 5,
 	execute(message, args) {
 		config = message.client.config;
@@ -17,19 +18,17 @@ module.exports = {
 		let { commands } = message.client;
 		let name = args[0].toLowerCase();
 		let command = commands.get(name) || commands.find(c => c.aliases && c.aliases.includes(name));
-		sendCommandHelp(message, command);
+		let showPerms = args.includes('-perms', 1);
+		sendCommandHelp(message, command, showPerms);
 	},
 };
 
-function sendCommandHelp(message, command) {
+function sendCommandHelp(message, command, showPerms) {
 	if (!command) {
 		return message.reply('that\'s not a valid command.');
 	}
 
-	let commandEmbed = new Discord.MessageEmbed()
-		.setColor('#ffffff')
-		// Bot icon
-		.setThumbnail('https://i.imgur.com/beKuLLM.png')
+	let commandEmbed = new ZapMessageEmbed()
 		.setTitle(`Command: \`${command.name}\``);
 
 	if (command.description) commandEmbed.addField('Description', command.description);
@@ -42,14 +41,20 @@ function sendCommandHelp(message, command) {
 	commandEmbed.addField('Usage', usageString);
 	commandEmbed.addField('Cooldown', `${command.cooldown || config.defaultCooldown} second(s)`);
 
+	if (showPerms) {
+		let fieldText = 'None';
+		if (command.permissions) fieldText = command.permissions.join(', ');
+		
+		commandEmbed.addField('Required bot permissions', fieldText);
+	}
+
 	message.channel.send(commandEmbed);
 }
 
 function sendAllCommandsHelp(message) {
 	let { commands } = message.client;
-	let embed = new Discord.MessageEmbed()
-		.setTitle('Commands')
-		.setThumbnail('https://i.imgur.com/beKuLLM.png');
+	let embed = new ZapMessageEmbed()
+		.setTitle('Commands');
 
 	embed.setDescription(commands.map(command => `${config.prefix}${command.name}: ${command.description || ''}`).join('\n'));
 	embed.setFooter(`You can send \`${config.prefix}help [command name]\` to get info on a specific command!`);

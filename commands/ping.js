@@ -1,6 +1,6 @@
 module.exports = {
 	name: 'ping',
-	description: 'Ping!',
+	description: 'Pong!',
 	aliases: ['p'],
 	cooldown: 5,
 	execute(message) {
