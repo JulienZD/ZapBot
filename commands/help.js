@@ -6,7 +6,7 @@ module.exports = {
 	name: 'help',
 	description: 'List all commands or info about a specific command.',
 	aliases: ['commands', '?'],
-	usage: '[command name]',
+	usage: '[command name [-perms]]',
 	cooldown: 5,
 	execute(message, args) {
 		config = message.client.config;
@@ -18,11 +18,12 @@ module.exports = {
 		let { commands } = message.client;
 		let name = args[0].toLowerCase();
 		let command = commands.get(name) || commands.find(c => c.aliases && c.aliases.includes(name));
-		sendCommandHelp(message, command);
+		let showPerms = args.includes('-perms', 1);
+		sendCommandHelp(message, command, showPerms);
 	},
 };
 
-function sendCommandHelp(message, command) {
+function sendCommandHelp(message, command, showPerms) {
 	if (!command) {
 		return message.reply('that\'s not a valid command.');
 	}
@@ -39,6 +40,13 @@ function sendCommandHelp(message, command) {
 
 	commandEmbed.addField('Usage', usageString);
 	commandEmbed.addField('Cooldown', `${command.cooldown || config.defaultCooldown} second(s)`);
+
+	if (showPerms) {
+		let fieldText = 'None';
+		if (command.permissions) fieldText = command.permissions.join(', ');
+		
+		commandEmbed.addField('Required bot permissions', fieldText);
+	}
 
 	message.channel.send(commandEmbed);
 }
