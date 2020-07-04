@@ -11,7 +11,7 @@ module.exports = {
 		if (isNaN(amount)) return message.reply('please enter a number.');
 
 		if (amount <= 1 || amount > 100) {
-			return message.reply('add a loop here');
+			return message.reply('I can only prune one to 99 messages at once');
 		}
 		
 		message.channel.bulkDelete(amount, true).catch(err => {
