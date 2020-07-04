@@ -5,6 +5,7 @@ module.exports = {
 	cooldown: 10,
 	args: true,
 	usage: '<amount>',
+	permissions: ['MANAGE_MESSAGES'],
 	execute(message, args) {
 		const amount = parseInt(args[0]) + 1; // Avoid pruning the sent message
 		if (isNaN(amount)) return message.reply('please enter a number.');
@@ -12,7 +13,7 @@ module.exports = {
 		if (amount < 2 || amount > 100) {
 			return message.reply('add a loop here');
 		}
-
+		
 		message.channel.bulkDelete(amount);
 	},
 };
