@@ -49,7 +49,7 @@ function isOnCooldown() {
 }
 
 function permissionsMissing() {
-	if (!command.permissions) return;
+	if (!command.permissions || msg.channel.type === 'dm') return;
 
 	let botGuildMember = msg.guild.member(client.user);
 	if (!botGuildMember.hasPermission(command.permissions))	return msg.channel.send('I don\'t have the right permissions to execute that command!');
