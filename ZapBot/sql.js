@@ -21,4 +21,5 @@ const Count = sequelize.define('count', {
 
 module.exports = {
 	Count: Count,
+	sync: () => sequelize.sync(),
 }
