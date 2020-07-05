@@ -19,7 +19,36 @@ const Count = sequelize.define('count', {
 	},
 });
 
+const UserCmdCount = sequelize.define('user-command-counter', {
+	userId: {
+		type: Sequelize.STRING,
+	},
+	commandName: {
+		type: Sequelize.STRING,
+	},
+	amount: {
+		type: Sequelize.INTEGER,
+		defaultValue: 0,
+		allowNull: false,
+	},
+});
+
+async function countCommand(command, user) {
+	let [userCommandUsageEntry,] = await UserCmdCount.findOrCreate({
+		where: {
+			userId: user.id,
+					commandName: command.name,
+		},
+		defaults: {
+			amount: 0,
+		},
+				});
+	await userCommandUsageEntry.increment('amount');
+}
+
 module.exports = {
 	Count: Count,
+	UserCmdCount: UserCmdCount,
 	sync: () => sequelize.sync(),
+	countCommand: countCommand,
 }
