@@ -19,7 +19,24 @@ const Count = sequelize.define('count', {
 	},
 });
 
+const UserCmdCount = sequelize.define('user-command-counter', {
+	userId: {
+		type: Sequelize.STRING,
+		unique: true,
+	},
+	commandName: {
+		type: Sequelize.STRING,
+		unique: true,
+	},
+	amount: {
+		type: Sequelize.INTEGER,
+		defaultValue: 0,
+		allowNull: false,
+	},
+});
+
 module.exports = {
 	Count: Count,
+	UserCmdCount: UserCmdCount,
 	sync: () => sequelize.sync(),
 }
