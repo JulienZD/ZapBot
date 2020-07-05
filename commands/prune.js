@@ -7,7 +7,7 @@ module.exports = {
 	usage: '<amount>',
 	permissions: ['MANAGE_MESSAGES'],
 	execute(message, args) {
-		if (message.channel.type === 'dm') return;
+		if (message.channel.type === 'dm') return message.channel.send('This command doesn\'t work in DMs.');
 		
 		const amount = parseInt(args[0]) + 1; // Avoid pruning the sent message
 		if (isNaN(amount)) return message.reply('please enter a number.');
