@@ -50,7 +50,7 @@ function isOnCooldown() {
 }
 
 function permissionsMissing() {
-	if (!command.permissions) return;
+	if (!command.permissions || msg.channel.type === 'dm') return;
 
 	let botGuildMember = msg.guild.member(client.user);
 	if (!botGuildMember.hasPermission(command.permissions))	return msg.channel.send('I don\'t have the right permissions to execute that command!');
@@ -66,6 +66,8 @@ module.exports = (theClient, message) => {
 	command = getCommand(client.commands);
 
 	if (!command) return;
+
+	if (command.guildOnly) return message.channel.send(`The \`${command.name}\` command doesn't work in DMs.`);
 
 	if (creatorOnly()) return;
 

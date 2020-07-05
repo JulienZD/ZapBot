@@ -6,6 +6,7 @@ module.exports = {
 	args: true,
 	usage: '<amount>',
 	permissions: ['MANAGE_MESSAGES'],
+	guildOnly: true,
 	execute(message, args) {
 		const amount = parseInt(args[0]) + 1; // Avoid pruning the sent message
 		if (isNaN(amount)) return message.reply('please enter a number.');
