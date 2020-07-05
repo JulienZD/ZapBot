@@ -22,11 +22,9 @@ const Count = sequelize.define('count', {
 const UserCmdCount = sequelize.define('user-command-counter', {
 	userId: {
 		type: Sequelize.STRING,
-		unique: true,
 	},
 	commandName: {
 		type: Sequelize.STRING,
-		unique: true,
 	},
 	amount: {
 		type: Sequelize.INTEGER,
@@ -35,22 +33,17 @@ const UserCmdCount = sequelize.define('user-command-counter', {
 	},
 });
 
-function countCommand(command, user) {
-	let userCommandUsageEntry = await UserCmdCount.findOne({ where: { userId: user.id, commandName: command.name } });
-		if (!userCommandUsageEntry) {
-			try {
-				userCommandUsageEntry = await UserCmdCount.create({
-					userId: message.author.id,
+async function countCommand(command, user) {
+	let [userCommandUsageEntry,] = await UserCmdCount.findOrCreate({
+		where: {
+			userId: user.id,
 					commandName: command.name,
+		},
+		defaults: {
+			amount: 0,
+		},
 				});
-			}
-			catch (err) {
-				console.log(err);
-				return message.reply('Something went horribly wrong.');
-			}
-		}
-		userCommandUsageEntry.amount = userCommandUsageEntry.amount + 1;
-		await countEntry.save();
+	await userCommandUsageEntry.increment('amount');
 }
 
 module.exports = {
