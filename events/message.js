@@ -2,6 +2,7 @@
 
 const Discord = require('discord.js');
 const cooldowns = new Discord.Collection();
+const db = require('../ZapBot/sql');
 let client, config, msg, command, args;
 
 const messageIgnored = () => !msg.content.startsWith(config.prefix) || msg.author.bot;
@@ -81,4 +82,6 @@ module.exports = (theClient, message) => {
 		console.error(error);
 		return msg.reply('there was an error trying to execute that command!');
 	}
+
+	db.countCommand(command, msg.author);
 };
