@@ -2,9 +2,10 @@ const { UserCmdCount } = require('../ZapBot/sql');
 
 module.exports = {
 	name: 'usage',
-	description: 'Displays the amount of times a command has been used.',
+	description: 'Displays the amount of times commands have been used.',
 	cooldown: 5,
-	async execute(message) {
+	usage: '[@user] [command]',
+	async execute(message, args) {
 		if (!message.mentions.users.size) {
 			let userCommandUsageEntries = await getUserEntries(message.author.id);
 			if (!userCommandUsageEntries) {
@@ -19,7 +20,7 @@ module.exports = {
 			
 			let amount = getTotalAmount(commandUsageEntries);
 			if (!amount) return message.reply('I don\'t have any info on that user.');
-			
+
 			return message.channel.send(`${requestedUser} has used ${amount} commands.`);
 		}
 	},
