@@ -66,6 +66,8 @@ module.exports = (theClient, message) => {
 
 	if (!command) return;
 
+	if (command.guildOnly) return message.channel.send(`The \`${command.name}\` command doesn't work in DMs.`);
+
 	if (creatorOnly()) return;
 
 	if (invalidArgs()) return;
