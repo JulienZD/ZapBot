@@ -34,9 +34,16 @@ function getTotalAmount(entries) {
 	return total;
 }
 
-async function getUserEntries(id) {
+async function getUserEntries(id, command) {
+	let filter = {
+		userId: id,
+	}
+	if (command) {
+		filter.commandName = command;
+	}
+
 	return await UserCmdCount.findAll({
 		attributes: ['amount'],
-		where: { userId: id } 
+		where: filter
 	});
 }
