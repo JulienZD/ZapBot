@@ -1,7 +1,7 @@
-const { initZapBot } = require('../ZapBot/setup');
+const ZapMessageEmbed = require('../ZapBot/ZapMessageEmbed');
 
 module.exports = (client, ready) => {
-	initZapBot();
+	ZapMessageEmbed.init(client);
 	console.log(`Logged in as ${client.user.tag}`);
 
 	client.user.setActivity(client.config.status, { type: 'LISTENING' })
