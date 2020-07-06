@@ -12,17 +12,24 @@ module.exports = {
 		let city = findCity(argCity);
 		if (!city) return message.reply('that\'s not a valid city.\nFor a list of valid cities, see http://bulk.openweathermap.org/sample/city.list.json.gz (downloads automatically)');
 
-			setFavourite(message.author.id, city);
-			return message.reply('hey');
-		}
+		setFavourite(message.author.id, city);
+		message.reply(`your favourite city has been set to '${city.name}'.`);
 	},
 };
 
 
 async function setFavourite(userId, city) {
-	// if city in valid city ids... 
-	let entry = await WeatherFavourite.findOne({ where: { userId: userId } });
-	entry.favouriteCity = city;
+	let [entry, created] = await WeatherFavourite.findOrCreate({ 
+		where: { 
+			userId: userId
+		},
+		defaults: {
+			favouriteCity: city.name,
+		},
+	});
+	if (created) return;
+
+	entry.favouriteCity = city.name;
 	await entry.save();
 }
 
