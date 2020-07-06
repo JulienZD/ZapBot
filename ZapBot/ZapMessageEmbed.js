@@ -29,4 +29,14 @@ class ZapMessageEmbed extends Discord.MessageEmbed {
 	}
 }
 
-module.exports.ZapMessageEmbed = ZapMessageEmbed;
+async function init(client) {
+	let mgr = new Discord.UserManager(client);
+	let creator = await mgr.fetch(client.config.creatorId);
+	ZapMessageEmbed.creditField.value = `_ZapBot created by ${creator}_`;
+	console.log('ZapBot initalized');
+}
+
+module.exports = {
+	ZapMessageEmbed: ZapMessageEmbed,
+	init: init,
+}
