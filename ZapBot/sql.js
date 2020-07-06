@@ -39,6 +39,8 @@ const WeatherFavourite = sequelize.define('weather-favourite', {
 		unique: true,
 	},
 	favouriteCity: Sequelize.STRING,
+	favouriteLat: Sequelize.STRING,
+	favouriteLon: Sequelize.STRING,
 })
 
 async function countCommand(command, user) {
