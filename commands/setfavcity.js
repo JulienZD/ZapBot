@@ -1,5 +1,5 @@
 const { WeatherFavourite } = require('../ZapBot/sql');
-const cities = require('./weather/current.city.list.min.json');
+const cities = require('./weather/city.list.min.json');
 
 module.exports = {
 	name: 'setfavcity',
