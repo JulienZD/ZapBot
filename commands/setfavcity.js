@@ -7,10 +7,11 @@ module.exports = {
 	cooldown: 5,
 	args: true,
 	execute(message, args) {
-		if (findCity(args[0])) return message.reply('found it!');
-		else return message.reply('nah');
+		let argCity = args.join(' ');
+	
+		let city = findCity(argCity);
+		if (!city) return message.reply('that\'s not a valid city.\nFor a list of valid cities, see http://bulk.openweathermap.org/sample/city.list.json.gz (downloads automatically)');
 
-		if (args[0]) {
 			setFavourite(message.author.id, city);
 			return message.reply('hey');
 		}
@@ -25,6 +26,6 @@ async function setFavourite(userId, city) {
 	await entry.save();
 }
 
-function findCity(city) {
-	console.log(cities);
+function findCity(cityToFind) {
+	return cities.find(city => cityToFind.toUpperCase() === city.name.toUpperCase());
 }
