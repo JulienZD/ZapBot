@@ -33,6 +33,14 @@ const UserCmdCount = sequelize.define('user-command-counter', {
 	},
 });
 
+const WeatherFavourite = sequelize.define('weather-favourite', {
+	userId: {
+		type: Sequelize.STRING,
+		unique: true,
+	},
+	favouriteCity: Sequelize.STRING,
+})
+
 async function countCommand(command, user) {
 	let [userCommandUsageEntry,] = await UserCmdCount.findOrCreate({
 		where: {
@@ -49,6 +57,7 @@ async function countCommand(command, user) {
 module.exports = {
 	Count: Count,
 	UserCmdCount: UserCmdCount,
+	WeatherFavourite: WeatherFavourite,
 	sync: () => sequelize.sync(),
 	countCommand: countCommand,
 }
