@@ -1,5 +1,5 @@
 const { WeatherFavourite } = require('../ZapBot/sql');
-const cities = require('./weather/city.list.min.json');
+const { findCity } = require('./weather/util');
 
 module.exports = {
 	name: 'setfavcity',
@@ -31,8 +31,4 @@ async function setFavourite(userId, city) {
 
 	entry.favouriteCity = city.name;
 	await entry.save();
-}
-
-function findCity(cityToFind) {
-	return cities.find(city => cityToFind.toUpperCase() === city.name.toUpperCase());
 }
