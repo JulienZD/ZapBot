@@ -1,8 +1,10 @@
 const Discord = require('discord.js');
+const db = require('../ZapBot/sql')
 
 let client;
 
-function init(theClient) {
+async function init(theClient) {
+	await db.sync();
 	client = theClient;
 	handleErrors();
 	loadCommands();

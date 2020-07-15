@@ -1,9 +1,8 @@
 const ZapMessageEmbed = require('../ZapBot/ZapMessageEmbed');
-const db = require('../ZapBot/sql')
 
 module.exports = (client, ready) => {
 	ZapMessageEmbed.init(client);
-	db.sync();
+
 	console.log(`Logged in as ${client.user.tag}`);
 
 	client.user.setActivity(client.config.status, { type: 'LISTENING' })
