@@ -61,14 +61,25 @@ const UserCmdCount = sequelize.define('user-command-counter', {
 // });
 // User.hasOne(BotDMChannel) // NULL allowed
 
-// const DMCommand = sequelize.define('DM_command', {
-// 	usages: {
-// 		type: Sequelize.INTEGER,
-// 		defaultValue: 0,
-// 	}
-// });
-// DMCommand.hasOne(BotDMChannel);
-// DMCommand.hasOne(Command);
+const DMCommand = sequelize.define('DMCommand', {
+	BotDMChannelId: {
+		type: Sequelize.INTEGER,
+		references: {
+			model: BotDMChannel,
+			key: 'id'
+		}
+	},
+	CommandId: {
+		type: Sequelize.INTEGER,
+		references: {
+			model: Command,
+			key: 'id'
+		}
+	},
+	Usages: Sequelize.INTEGER
+});
+BotDMChannel.belongsToMany(Command, { through: DMCommand });
+Command.belongsToMany(BotDMChannel, { through: DMCommand });
 
 // const Guild = sequelize.define('guild', {
 // 	id: {
