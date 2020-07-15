@@ -5,128 +5,101 @@ const sequelize = new Sequelize( {
 	dialect: 'sqlite',
 	logging: false,
 	storage: 'database.sqlite',
+	define: {
+		freezeTableName: true,
+	}
 });
 
-const Count = sequelize.define('count', {
-	userId: {
+// const Count = sequelize.define('count', {
+// 	userId: {
+// 		type: Sequelize.STRING,
+// 		unique: true,
+// 	},
+// 	amount: {
+// 		type: Sequelize.INTEGER,
+// 		defaultValue: 0,
+// 		allowNull: false,
+// 	},
+// });
+
+const User = sequelize.define('User', {
+	discordId: {
 		type: Sequelize.STRING,
 		unique: true,
 	},
-	amount: {
-		type: Sequelize.INTEGER,
-		defaultValue: 0,
-		allowNull: false,
-	},
 });
 
-const UserCmdCount = sequelize.define('user-command-counter', {
-	userId: {
+const City = sequelize.define('City', {
+	name: {
 		type: Sequelize.STRING,
-	},
-	commandName: {
+		unique: true,
+	}
+});
+User.belongsTo(City); // NULL allowed
+
+const Command = sequelize.define('Command', {
+	name: Sequelize.STRING,
+});
+
+const BotDMChannel = sequelize.define('Bot_DMChannel', {
+	channelId: {
 		type: Sequelize.STRING,
-	},
-	amount: {
-		type: Sequelize.INTEGER,
-		defaultValue: 0,
-		allowNull: false,
-	},
+		unique: true,
+	}	
 });
+User.belongsTo(BotDMChannel) // NULL allowed
 
-// const User = sequelize.define('user', {
-// 	id: {
-// 		type: Sequelize.STRING,
-// 		unique: true,
-// 	}
-// });
-
-// const City = sequelize.define('city', {
-// 	name: {
-// 		type: Sequelize.STRING,
-// 		unique: true,
-// 	}
-// });
-// User.hasOne(City); // NULL allowed
-
-// const Command = sequelize.define('command', {
-// 	name: Sequelize.STRING,
-// });
-
-
-// const BotDMChannel = sequelize.define('botDMChannel', {
-// 	id: {
-// 		type: Sequelize.STRING,
-// 		unique: true,
-// 	}	
-// });
-// User.hasOne(BotDMChannel) // NULL allowed
-
-const DMCommand = sequelize.define('DMCommand', {
-	BotDMChannelId: {
-		type: Sequelize.INTEGER,
-		references: {
-			model: BotDMChannel,
-			key: 'id'
-		}
-	},
-	CommandId: {
-		type: Sequelize.INTEGER,
-		references: {
-			model: Command,
-			key: 'id'
-		}
-	},
-	Usages: Sequelize.INTEGER
-});
+const DMCommand = sequelize.define('DM_Command', {
+	Usages: Sequelize.INTEGER,
+}, { timestamps: false });
 BotDMChannel.belongsToMany(Command, { through: DMCommand });
 Command.belongsToMany(BotDMChannel, { through: DMCommand });
 
-// const Guild = sequelize.define('guild', {
-// 	id: {
-// 		type: Sequelize.STRING,
-// 		unique: true,
-// 	}
-// });
+const Guild = sequelize.define('Guild', {
+	guildId: {
+		type: Sequelize.STRING,
+		unique: true,
+	}
+});
 
-// const TextChannel = sequelize.define('textchannel', {
-// 	id: {
-// 		type: Sequelize.STRING,
-// 		unique: true,
-// 	}
-// });
-// 	Guild.hasMany(TextChannel);
+const TextChannel = sequelize.define('TextChannel', {
+	textChannelId: {
+		type: Sequelize.STRING,
+		unique: true,
+	}
+});
+TextChannel.belongsTo(Guild);
 
-// const UserTextChannel = sequelize.define('user_channel', {
-// });
-// UserTextChannel.hasOne(User);
-// UserTextChannel.hasOne(TextChannel);
-
-// const UserTextChannelCommand = sequelize.define('user_textchannel_command', {
-// 	usages: {
-// 		type: Sequelize.INTEGER,
-// 		defaultValue: 0,
-// 	}
-// });
-// UserTextChannelCommand.hasOne(UserTextChannel);
-// UserTextChannelCommand.hasOne(Command);
+// --- User_TextChannel ---
+const UserTextChannel = sequelize.define('User_TextChannel', {
+	id: {
+		type: Sequelize.INTEGER,
+		primaryKey: true,
+		autoIncrement: true,
+		allowNull: false
+	}
+}, { timestamps: false });
+User.belongsToMany(TextChannel, { through: UserTextChannel });
+TextChannel.belongsToMany(User, { through: UserTextChannel });
 
 
-async function countCommand(command, user) {
-	let [userCommandUsageEntry,] = await UserCmdCount.findOrCreate({
-		where: {
-			userId: user.id,
-			commandName: command.name,
-		},
-		defaults: {
-			amount: 0,
-		},
-	});
-	await userCommandUsageEntry.increment('amount');
-}
+const UserTextChannelCommand = sequelize.define('User_TextChannel_Command', {
+	usages: Sequelize.INTEGER,
+}, { timestamps: false });
+UserTextChannel.belongsToMany(Command, { through: UserTextChannelCommand });
+Command.belongsToMany(UserTextChannel, { through: UserTextChannelCommand });
 
 module.exports = {
-	Count: Count,
-	UserCmdCount: UserCmdCount,
+	//Count: Count,
+	User: User,
+	City: City,
+	BotDMChannel: BotDMChannel,
+	UserTextChannel: UserTextChannel,
+	UserTextChannelCommand: UserTextChannelCommand,
+	Guild: Guild,
+	DMCommand: DMCommand,
+	Command: Command,
+	TextChannel: TextChannel,
 	sync: () => sequelize.sync(),
 	countCommand: countCommand,
 }
