@@ -27,6 +27,10 @@ const User = sequelize.define('User', {
 		type: Sequelize.STRING,
 		unique: true,
 	},
+	DMChannelId: {
+		type: Sequelize.STRING,
+		unique: true
+	}
 });
 
 const City = sequelize.define('City', {
@@ -41,19 +45,14 @@ const Command = sequelize.define('Command', {
 	name: Sequelize.STRING,
 });
 
-const BotDMChannel = sequelize.define('Bot_DMChannel', {
-	channelId: {
-		type: Sequelize.STRING,
-		unique: true,
-	}	
-});
-User.belongsTo(BotDMChannel) // NULL allowed
-
-const DMCommand = sequelize.define('DM_Command', {
-	Usages: Sequelize.INTEGER,
+const UserDMCommand = sequelize.define('User_DM_Command', {
+	Usages: {
+		type: Sequelize.INTEGER,
+		defaultValue: 0,
+	}
 }, { timestamps: false });
-BotDMChannel.belongsToMany(Command, { through: DMCommand });
-Command.belongsToMany(BotDMChannel, { through: DMCommand });
+User.belongsToMany(Command, { through: UserDMCommand });
+Command.belongsToMany(User, { through: UserDMCommand });
 
 const Guild = sequelize.define('Guild', {
 	guildId: {
@@ -84,22 +83,42 @@ TextChannel.belongsToMany(User, { through: UserTextChannel });
 
 
 const UserTextChannelCommand = sequelize.define('User_TextChannel_Command', {
-	usages: Sequelize.INTEGER,
+	Usages: {
+		type: Sequelize.INTEGER,
+		defaultValue: 0,
+	}
 }, { timestamps: false });
 UserTextChannel.belongsToMany(Command, { through: UserTextChannelCommand });
 Command.belongsToMany(UserTextChannel, { through: UserTextChannelCommand });
 
+async function countCommand(command, message) {
+	const [user,] = await User.findOrCreate({ where: { discordId: message.author.id } });
+	const commandEntry = await Command.findOne({ where: { name: command.name } });
+	const isDM = message.channel.type == 'dm';
+	if (isDM) {
+		if (!user.DMChannelId) {
+			user.DMChannelId = message.channel.id;
+			await user.save();
+		}
+		const [dmCommandEntry,] = await UserDMCommand.findOrCreate({ 
+			where: {
+				UserId: user.id,
+				CommandId: commandEntry.id 
+			}
+		})
+		await dmCommandEntry.increment('usages');
+		return console.log(`Donezo, new usages value is ${dmCommandEntry.usages}`);
+	}
+	else {
+		let guildId = message.guild.id;
+	}
+	
+}
+
 module.exports = {
 	//Count: Count,
 	User: User,
-	City: City,
-	BotDMChannel: BotDMChannel,
-	UserTextChannel: UserTextChannel,
-	UserTextChannelCommand: UserTextChannelCommand,
-	Guild: Guild,
-	DMCommand: DMCommand,
 	Command: Command,
-	TextChannel: TextChannel,
 	sync: () => sequelize.sync(),
 	countCommand: countCommand,
 }
