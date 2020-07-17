@@ -27,7 +27,7 @@ const User = sequelize.define('User', {
 		type: Sequelize.STRING,
 		unique: true,
 	},
-	DMChannelId: {
+	dmChannelId: {
 		type: Sequelize.STRING,
 		unique: true
 	}
@@ -46,7 +46,7 @@ const Command = sequelize.define('Command', {
 });
 
 const UserDMCommand = sequelize.define('User_DM_Command', {
-	Usages: {
+	usages: {
 		type: Sequelize.INTEGER,
 		defaultValue: 0,
 	}
@@ -83,7 +83,7 @@ TextChannel.belongsToMany(User, { through: UserTextChannel });
 
 
 const UserTextChannelCommand = sequelize.define('User_TextChannel_Command', {
-	Usages: {
+	usages: {
 		type: Sequelize.INTEGER,
 		defaultValue: 0,
 	}
@@ -102,8 +102,8 @@ async function countCommand(command, message) {
 		}
 		const [dmCommandEntry,] = await UserDMCommand.findOrCreate({ 
 			where: {
-				UserId: user.id,
-				CommandId: commandEntry.id 
+			userId: user.id,
+			commandId: commandEntry.id 
 			}
 		})
 		await dmCommandEntry.increment('usages');
