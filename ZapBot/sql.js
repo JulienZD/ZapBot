@@ -39,7 +39,7 @@ const City = sequelize.define('City', {
 		unique: true,
 	}
 });
-User.belongsTo(City); // NULL allowed
+User.belongsTo(City, { foreignKey: 'cityId' }); // NULL allowed
 
 const Command = sequelize.define('Command', {
 	name: Sequelize.STRING,
@@ -51,8 +51,8 @@ const UserDMCommand = sequelize.define('User_DM_Command', {
 		defaultValue: 0,
 	}
 }, { timestamps: false });
-User.belongsToMany(Command, { through: UserDMCommand });
-Command.belongsToMany(User, { through: UserDMCommand });
+User.belongsToMany(Command, { through: UserDMCommand, foreignKey: 'userId', otherKey: 'commandId' });
+Command.belongsToMany(User, { through: UserDMCommand, foreignKey: 'commandId', otherKey: 'userId' });
 
 const Guild = sequelize.define('Guild', {
 	guildId: {
@@ -67,6 +67,7 @@ const TextChannel = sequelize.define('TextChannel', {
 		unique: true,
 	}
 });
+Guild.hasMany(TextChannel, { otherKey: 'guildId' });
 TextChannel.belongsTo(Guild);
 
 // --- User_TextChannel ---
@@ -78,8 +79,12 @@ const UserTextChannel = sequelize.define('User_TextChannel', {
 		allowNull: false
 	}
 }, { timestamps: false });
-User.belongsToMany(TextChannel, { through: UserTextChannel });
-TextChannel.belongsToMany(User, { through: UserTextChannel });
+User.belongsToMany(TextChannel, { through: UserTextChannel, foreignKey: 'userId', otherKey: 'textChannelId' });
+TextChannel.belongsToMany(User, { through: UserTextChannel, foreignKey: 'textChannelId', otherKey: 'userId' });
+User.hasMany(UserTextChannel, { foreignKey: 'userId' });
+UserTextChannel.belongsTo(User, { foreignKey: 'userId' });
+TextChannel.hasMany(UserTextChannel, { foreignKey: 'textChannelId' });
+UserTextChannel.belongsTo(TextChannel, { foreignKey: 'textChannelId' });
 
 
 const UserTextChannelCommand = sequelize.define('User_TextChannel_Command', {
@@ -88,8 +93,13 @@ const UserTextChannelCommand = sequelize.define('User_TextChannel_Command', {
 		defaultValue: 0,
 	}
 }, { timestamps: false });
-UserTextChannel.belongsToMany(Command, { through: UserTextChannelCommand });
-Command.belongsToMany(UserTextChannel, { through: UserTextChannelCommand });
+UserTextChannel.belongsToMany(Command, { through: UserTextChannelCommand, foreignKey: 'user_textChannelId', otherKey: 'commandId' });
+Command.belongsToMany(UserTextChannel, { through: UserTextChannelCommand, foreignKey: 'commandId', otherKey: 'user_textChannelId' });
+UserTextChannel.hasMany(UserTextChannelCommand, { foreignKey: 'user_textChannelId' });
+UserTextChannelCommand.belongsTo(UserTextChannel, { foreignKey: 'user_textChannelId' });
+Command.hasMany(UserTextChannelCommand, { foreignKey: 'user_textChannelId' });
+UserTextChannelCommand.belongsTo(Command, { foreignKey: 'user_textChannelId' });
+
 
 async function countCommand(command, message) {
 	const [user,] = await User.findOrCreate({ where: { discordId: message.author.id } });
