@@ -104,10 +104,52 @@ UserTextChannelCommand.belongsTo(Command, { foreignKey: 'user_textChannelId' });
 async function countCommand(command, message) {
 	const [user,] = await User.findOrCreate({ where: { discordId: message.author.id } });
 	const commandEntry = await Command.findOne({ where: { name: command.name } });
-	const isDM = message.channel.type == 'dm';
-	if (isDM) {
-		if (!user.DMChannelId) {
-			user.DMChannelId = message.channel.id;
+
+	if (message.channel.type == 'dm') {
+		return countDMCommand(user, commandEntry, message.channel.id);
+	}
+	else {
+		return countGuildCommand(user, commandEntry, message);
+	}
+}
+
+async function countGuildCommand(user, command, message) {
+	let guildId = message.guild.id;
+	let channelId = message.channel.id;
+
+	const [guild,] = await Guild.findOrCreate({ where: { guildId: guildId } });
+	const [tc, created] = await TextChannel.findOrCreate({
+		where: {
+			textChannelId: channelId,
+			guildId: guild.id
+		},
+		include: Guild
+	});
+	if (created) {
+		await tc.setGuild(guild);
+	}
+
+	const [userTextChannel,] = await UserTextChannel.findOrCreate({
+		where: { 
+			userId: user.id, 
+			textChannelId: tc.id
+		},
+		include: [User, TextChannel]
+	});
+	const [userTextChannelCommand,] = await UserTextChannelCommand.findOrCreate({
+		include: [UserTextChannel, Command],
+		where: {
+			user_textChannelId: userTextChannel.id,
+			commandId: command.id
+		}
+	});
+	await userTextChannelCommand.increment('usages');
+	return console.log(`User [${user.discordId}]: Incremented counter for command [${command.name}] in guild [${guild.guildId}], channel [${channelId}] to [${userTextChannelCommand.usages}]`);
+}
+
+async function countDMCommand(user, commandEntry, channelId) {
+	if (!user.dmChannelId) {
+		user.dmChannelId = channelId;
 			await user.save();
 		}
 		const [dmCommandEntry,] = await UserDMCommand.findOrCreate({ 
