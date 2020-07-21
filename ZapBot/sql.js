@@ -161,11 +161,6 @@ async function countDMCommand(user, commandEntry, channelId) {
 		await dmCommandEntry.increment('usages');
 		return console.log(`Donezo, new usages value is ${dmCommandEntry.usages}`);
 	}
-	else {
-		let guildId = message.guild.id;
-	}
-	
-}
 
 module.exports = {
 	//Count: Count,
